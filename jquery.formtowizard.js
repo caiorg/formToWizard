@@ -32,7 +32,7 @@
         var element = this
             , steps = $( element ).find( "fieldset" )
             , count = steps.size()
-            , submmitButtonName = "#" + options.submitButton
+            , submmitButtonName = options.submitButton
             , commands = null;
 
 
@@ -46,22 +46,23 @@
 
             if( options.showProgress && typeof(options.progress) !== "function") {
                 if( options.showStepNo )
-                    $(element).before("<ul id='steps' class='steps'></ul>");
+                    $(element).before("<ul class='steps'></ul>");
                 else
-                    $(element).before("<ul id='steps' class='steps breadcrumb'></ul>");
+                    $(element).before("<ul class='steps breadcrumb'></ul>");
             }
             /************** End Validate Options ******************/
 
 
             steps.each(function(i) {
-                $(this).wrap('<div id="step' + i + '" class="stepDetails"></div>');
-                $(this).append('<p id="step' + i + 'commands" class="commands"></p>');
+                var $this = $(this);
+                $this.wrap('<div class="step' + i + ' stepDetails"></div>');
+                $this.append('<p class="step' + i + 'commands commands"></p>');
 
                 if( options.showProgress && typeof(options.progress) !== "function") {
                     if( options.showStepNo )
-                        $("#steps").append("<li id='stepDesc" + i + "'>Step " + (i + 1) + "<span>" + $(this).find("legend").html() + "</span></li>");
+                        $(".steps", element).append("<li class='stepDesc" + i + "'>Step " + (i + 1) + "<span>" + $this.find("legend").html() + "</span></li>");
                     else
-                        $("#steps").append("<li id='stepDesc" + i + "'>" + $(this).find("legend").html() + "</li>");
+                        $(".steps", element).append("<li class='stepDesc" + i + "'>" + $this.find("legend").html() + "</li>");
                 }
 
                 if (i == 0) {
@@ -69,13 +70,13 @@
                     selectStep(i);
                 }
                 else if (i == count - 1) {
-                    $("#step" + i).hide();
+                    $(".step" + i, element).hide();
                     createPrevButton(i);
                     // move submit button to the last step
-                    $(submmitButtonName).addClass('next').detach().appendTo("#step" + i + "commands");
+                    $(submmitButtonName, element).addClass('next').detach().appendTo($(".step" + i + "commands", element));
                 }
                 else {
-                    $("#step" + i).hide();
+                    $(".step" + i, element).hide();
                     createPrevButton(i);
                     createNextButton(i);
                 }
@@ -103,21 +104,21 @@
                 GotoStep: function( stepNo ) {
                     var stepName = "step" + (--stepNo);
 
-                    if( $( '#' + stepName )[ 0 ] === undefined ) {
+                    if( $( '.' + stepName )[ 0 ] === undefined ) {
                         throw 'Step No ' + stepNo + ' not found!';
                     }
 
-                    if( $( '#' + stepName ).css( 'display' ) === 'none' ) {
+                    if( $( '.' + stepName, element ).css( 'display' ) === 'none' ) {
                         $( element ).find( '.stepDetails' ).hide();
-                        $( '#' + stepName ).show();
+                        $( '.' + stepName, element ).show();
                         selectStep( stepNo );
                     }
                 },
                 NextStep: function() {
-                    $( '.stepDetails:visible' ).find( 'a.next' ).click();
+                    $( '.stepDetails:visible', element ).find( 'a.next' ).click();
                 },
                 PreviousStep: function() {
-                    $( '.stepDetails:visible' ).find( 'a.prev' ).click();
+                    $( '.stepDetails:visible', element ).find( 'a.prev' ).click();
                 }
             };
         }
@@ -127,15 +128,15 @@
         /******************** Private Methods ********************/
         function createPrevButton(i) {
             var stepName = 'step' + i;
-            $('#' + stepName + 'commands').append(
-                '<' + options.buttonTag + ' href="#" id="' + stepName + 'Prev" class="' + options.prevBtnClass + '">' +
+            $('.' + stepName + 'commands', element).append(
+                '<' + options.buttonTag + ' href="#" class="' + stepName + 'Prev ' + options.prevBtnClass + '">' +
                 options.prevBtnName +
                 '</' + options.buttonTag + '>'
             );
 
-            $("#" + stepName + "Prev").bind("click", function(e) {
-                $("#" + stepName).hide();
-                $("#step" + (i - 1)).show();
+            $("." + stepName + "Prev", element).bind("click", function(e) {
+                $("." + stepName, element).hide();
+                $(".step" + (i - 1), element).show();
                 selectStep(i - 1);
                 return false;
             });
@@ -143,15 +144,15 @@
 
         function createNextButton(i) {
             var stepName = 'step' + i;
-            $('#' + stepName + 'commands').append(
-                '<' + options.buttonTag + ' href="#" id="' + stepName + 'Next" class="' + options.nextBtnClass + '">' +
+            $('.' + stepName + 'commands', element).append(
+                '<' + options.buttonTag + ' href="#" class="' + stepName + 'Next ' + options.nextBtnClass + '">' +
                 options.nextBtnName +
                 '</' + options.buttonTag + '>');
 
-            $("#" + stepName + "Next").bind( "click", function(e) {
-                if( options.validateBeforeNext(element, $("#" + stepName)) === true ) {
-                    $("#" + stepName).hide();
-                    $("#step" + (i + 1)).show();
+            $("." + stepName + "Next", element).bind( "click", function(e) {
+                if( options.validateBeforeNext(element, $("." + stepName, element)) === true ) {
+                    $("." + stepName, element).hide();
+                    $(".step" + (i + 1), element).show();
                     //if (i + 2 == count)
                     selectStep(i + 1);
                 }
@@ -164,8 +165,8 @@
             if ( typeof(options.progress) === "function" ) {
                 options.progress(i, count);
             } else if( options.showProgress ) {
-                $("#steps li").removeClass("current");
-                $("#stepDesc" + i).addClass("current");
+                $(".steps li", element).removeClass("current");
+                $(".stepDesc" + i, element).addClass("current");
             }
 
             if( options.select ) {
