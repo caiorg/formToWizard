@@ -67,6 +67,7 @@ $signupForm.formToWizard({
 - [example 1](https://jsfiddle.net/artoodetoo/ej13317f/embedded/result/) from Junko: progress as step list, no validation
 - [example 2](https://jsfiddle.net/artoodetoo/roct3rcf/embedded/result/) from iFadey: progress like breadcrubms, Validate Engine plugin 
 - [example 3](https://jsfiddle.net/artoodetoo/r67b1jkb/embedded/result/) from artoodetoo: progress via callback as color bar, Validation plugin
+- [example 4](https://jsfiddle.net/caiorg/qozm39qn/8/embedded/result/) from me: multiple forms support with independent Validation
 
 
 [1]: http://www.jankoatwarpspeed.com/turn-any-webform-into-a-powerful-wizard-with-jquery-formtowizard-plugin/
