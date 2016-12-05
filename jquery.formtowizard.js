@@ -170,7 +170,7 @@
             }
 
             if( options.select ) {
-                options.select(element, $('#step'+i));
+                options.select(element, $('.step'+i));
             }
         }
         /******************** End Private Methods ********************/
