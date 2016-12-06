@@ -18,7 +18,7 @@
                 submitButton:       '',
                 showProgress:       true,
                 showStepNo:         true,
-                validateBeforeNext: null,
+                validateStep:       null,
                 select:             null,
                 progress:           null,
                 nextBtnName:        'Next &gt;',
@@ -41,8 +41,8 @@
             $( element ).data( 'options', options );
 
             /**************** Validate Options ********************/
-            if( typeof( options.validateBeforeNext ) !== "function" )
-                options.validateBeforeNext = function() { return true; };
+            if( typeof( options.validateStep ) !== "function" )
+                options.validateStep = function() { return true; };
 
             if( options.showProgress && typeof(options.progress) !== "function") {
                 if( options.showStepNo )
@@ -73,7 +73,15 @@
                     $(".step" + i, element).hide();
                     createPrevButton(i);
                     // move submit button to the last step
-                    $(submmitButtonName, element).addClass('next').detach().appendTo($(".step" + i + "commands", element));
+                    $(submmitButtonName, element).addClass('next').detach().appendTo($(".step" + i + "commands", element)).on('click', function (e) {
+                        e.preventDefault();
+
+                        console.log($(this).parents('div[class*=step]'));
+
+                        if( options.validateStep(element, $(this).parents('div[class*=step]')) === true ) {
+                            element.submit();
+                        }
+                    });
                 }
                 else {
                     $(".step" + i, element).hide();
@@ -150,7 +158,7 @@
                 '</' + options.buttonTag + '>');
 
             $("." + stepName + "Next", element).bind( "click", function(e) {
-                if( options.validateBeforeNext(element, $("." + stepName, element)) === true ) {
+                if( options.validateStep(element, $("." + stepName, element)) === true ) {
                     $("." + stepName, element).hide();
                     $(".step" + (i + 1), element).show();
                     //if (i + 2 == count)
