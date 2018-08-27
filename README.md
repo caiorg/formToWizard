@@ -24,22 +24,15 @@ To use [jQuery Validation][4] plugin and see progress as growing color bar, do s
 ```js
 var $signupForm = $( '#SignupForm' );
 
-$signupForm.validate(); 
+$signupForm.validate();
 
 $signupForm.formToWizard({
     submitButton: '#SaveAccount',
     nextBtnName: 'Forward >>',
     prevBtnName: '<< Previous',
 
-    validateBeforeNext: function(form, step) {
-        var stepIsValid = true;
-        var validator = form.validate();
-
-        $(":input", step).each( function(index) {
-            var x = validator.element(this);
-            stepIsValid = stepIsValid && (typeof x == 'undefined' || x);
-        });
-        return stepIsValid;
+    validateStep: function(form, step) {
+        return form.valid()
     },
 
     progress: function (i, count) {
@@ -58,16 +51,16 @@ $signupForm.formToWizard({
 - **buttonTag**: HTML tag used to generate Previous and Next buttons
 - **showProgress**: If enabled, shows the steps breadcrumb
 - **showStepNo**: If enabled, shows step numbers in breadcrumb
-- **validateBeforeNext**: Validation callback before advancing to next step
+- **validateStep**: Validation callback before advancing to next step
 - **progress**: If defined, fires a callback each time the user advances to next step
 
 
 ### Live examples in jsfiddle
 
 - [example 1](https://jsfiddle.net/artoodetoo/ej13317f/embedded/result/) from Junko: progress as step list, no validation
-- [example 2](https://jsfiddle.net/artoodetoo/roct3rcf/embedded/result/) from iFadey: progress like breadcrubms, Validate Engine plugin 
+- [example 2](https://jsfiddle.net/artoodetoo/roct3rcf/embedded/result/) from iFadey: progress like breadcrubms, Validate Engine plugin
 - [example 3](https://jsfiddle.net/artoodetoo/r67b1jkb/embedded/result/) from artoodetoo: progress via callback as color bar, Validation plugin
-- [example 4](https://jsfiddle.net/caiorg/qozm39qn/8/embedded/result/) from me: multiple forms support with independent Validation
+- [example 4](https://jsfiddle.net/caiorg/qozm39qn/8/embedded/result/) from caiorg: multiple forms support with independent Validation
 
 
 [1]: http://www.jankoatwarpspeed.com/turn-any-webform-into-a-powerful-wizard-with-jquery-formtowizard-plugin/
